@@ -1,4 +1,8 @@
-<?php 
+<?php
+/**
+ * @file
+ * Provide a user interface for the Replicate API.
+ */
 
 /**
  * Implements hook_menu().
@@ -127,35 +131,35 @@ function replicate_ui_permission() {
 }
 
 /**
-  * Implements hook_views_api.
-  */
+ * Implements hook_views_api().
+ */
 function replicate_ui_views_api() {
   return array(
     'api' => 3,
-    'path' => drupal_get_path('module', 'replicate_ui') .'/views',
+    'path' => drupal_get_path('module', 'replicate_ui') . '/views',
   );
 }
 
 /**
  * Implements hook_action_info().
+ *
  * Registers custom replicate actions as Drupal actions.
  */
 function replicate_ui_action_info() {
   $actions = array();
   $files = replicate_ui_load_action_includes();
   foreach ($files as $filename) {
-    $action_info_fn = 'replicate_ui_'. str_replace('.', '_', basename($filename, '.inc')).'_info';
+    $action_info_fn = 'replicate_ui_' . str_replace('.', '_', basename($filename, '.inc')) . '_info';
     $action_info = call_user_func($action_info_fn);
     if (is_array($action_info)) {
       $actions += $action_info;
     }
   }
-
   return $actions;
 }
 
 /**
- * Loads the replicate actions placed in their own include files (under actions/).
+ * Loads the replicate actions placed in their own include files
  *
  * @return
  *   An array of containing filenames of the included actions.

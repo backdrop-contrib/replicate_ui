@@ -1,8 +1,12 @@
 <?php
+/**
+ * @file
+ * Views integration for Replicate API.
+ */
 
 /**
-* Implements hook_views_data_alter()
-*/
+ * Implements hook_views_data_alter().
+ */
 function replicate_ui_views_data_alter(&$views_data) {
   // allow for intergration with all entity types
   $types = entity_get_info();

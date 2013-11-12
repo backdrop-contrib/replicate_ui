@@ -1,10 +1,15 @@
 <?php
+/**
+ * @file
+ * Views display handler for adding a replicate link.
+ */
 
 /**
-* Field handler to present an replicate link.
-*
-* Closely modeled after views/modules/node/views_handler_field_node_link_edit.inc
-*/
+ * Field handler to present an replicate link.
+ *
+ * Closely modeled after:
+ *   - views/modules/node/views_handler_field_node_link_edit.inc
+ */
 class views_handler_field_replicate_ui_link extends views_handler_field_node_link {
   /**
    * Renders the link if they have permission to view it
