@@ -23,6 +23,16 @@ function replicate_ui_menu() {
     'access arguments' => array(0, 1),
     'type' => MENU_LOCAL_TASK,
   );
+  // support for user entity though this might not do what you think without
+  // some kind of clean up module: see https://www.drupal.org/node/2394779
+  $items['user/%user/replicate'] = array(
+    'title' => 'Replicate',
+    'page callback' => 'drupal_get_form',
+    'page arguments' => array('replicate_ui_confirm', 0, 1),
+    'access callback' => 'replicate_ui_access',
+    'access arguments' => array(0, 1),
+    'type' => MENU_LOCAL_TASK,
+  );
   // field_collection support, we don't check for the submodule directly
   // because people might want to use another, completely valid, approach
   if (module_exists('field_collection')) {
