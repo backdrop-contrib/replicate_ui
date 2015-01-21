@@ -88,7 +88,7 @@ function replicate_ui_confirm($form, &$form_state, $type, $entity_id) {
 }
 
 /**
- * Execute full book deletion using batch processing.
+ * Confirm submission.
  */
 function replicate_ui_confirm_submit($form, &$form_state) {
   if ($form_state['values']['confirm']) {
