@@ -33,6 +33,17 @@ function replicate_ui_menu() {
     'access arguments' => array(0, 1),
     'type' => MENU_LOCAL_TASK,
   );
+  // ewwwww, taxonomy support
+  if (module_exists('taxonomy')) {
+    $items['taxonomy/term/%taxonomy_term/replicate'] = array(
+      'title' => 'Replicate',
+      'page callback' => 'drupal_get_form',
+      'page arguments' => array('replicate_ui_confirm', 'taxonomy_term', 2),
+      'access callback' => 'replicate_ui_access',
+      'access arguments' => array('taxonomy_term', 2),
+      'type' => MENU_LOCAL_TASK,
+    );
+  }
   // field_collection support, we don't check for the submodule directly
   // because people might want to use another, completely valid, approach
   if (module_exists('field_collection')) {
