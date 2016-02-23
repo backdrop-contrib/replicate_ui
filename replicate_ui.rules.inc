@@ -24,7 +24,7 @@ function replicate_ui_rules_action_info() {
       'label' => t('Replicate a Node'),
       'group' => t('Replicate'),
       'parameter' => array(
-        'account' => array(
+        'node' => array(
           'type' => 'node',
           'label' => t('Node to replicate'),
         ),
@@ -47,7 +47,7 @@ function replicate_ui_rules_action_info() {
           'description' => t('Specifies the type of the entity that should be created.'),
           'restriction' => 'input',
         ),
-        'account' => array(
+        'entity' => array(
           'type' => 'unknown',
           'label' => t('Entity to replicate'),
         ),
@@ -93,7 +93,6 @@ function replicate_ui_replicate_node($node) {
   $new = replicate_entity('node', $node);
   if ($new) {
     drupal_set_message(t('Node @title has been replicated!', array('@title' => $node->title)));
-    
     return array('replica_node' => $new);
   }
 }
@@ -107,7 +106,6 @@ function replicate_ui_replicate_entity($type, $id) {
   $new = replicate_entity($type, $toclone);
   if ($new) {
     drupal_set_message(t('Entity @title has been replicated!', array('@title' => $toclone->title)));
-
     return array('replica_entity' => $new);
   }
 }
@@ -129,18 +127,18 @@ function replicate_ui_replicate_field_collection($field_collection) {
 
 function replicate_ui_rules_event_info() {
   $defaults = array(
-      'module' => 'replicate_ui',
-      'group' => t('Replicate'),
+    'module' => 'replicate_ui',
+    'group' => t('Replicate'),
   );
   return array(
-      'replicate_ui_after_replication' => $defaults +
-      array(
-          'label' => t('After Replication'),
-          'variables' => array(
-              'replica' => array('type' => 'entity', 'label' => t('Replicate / Clone')),
-              'entity_type' => array('type' => 'text', 'label' => t('Entity type')),
-              'original' => array('type' => 'entity', 'label' => t('Original')),
-          ),
+    'replicate_ui_after_replication' => $defaults +
+    array(
+      'label' => t('After Replication'),
+      'variables' => array(
+        'replica' => array('type' => 'entity', 'label' => t('Replicate / Clone')),
+        'entity_type' => array('type' => 'text', 'label' => t('Entity type')),
+        'original' => array('type' => 'entity', 'label' => t('Original')),
       ),
+    ),
   );
 }
