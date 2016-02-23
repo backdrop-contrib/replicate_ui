@@ -36,6 +36,29 @@ function replicate_ui_rules_action_info() {
         ),
       ),
     ),
+    'replicate_ui_replicate_entity' => array(
+      'label' => t('Replicate an Entity'),
+      'group' => t('Replicate'),
+      'parameter' => array(
+        'type' => array(
+          'type' => 'text',
+          'label' => t('Entity type'),
+          'options list' => 'rules_entity_action_type_options',
+          'description' => t('Specifies the type of the entity that should be created.'),
+          'restriction' => 'input',
+        ),
+        'account' => array(
+          'type' => 'unknown',
+          'label' => t('Entity to replicate'),
+        ),
+      ),
+      'provides' => array(
+        'replica_entity' => array(
+          'type' => 'entity',
+          'label' => t('Replica node'),
+        ),
+      ),
+    ),
   );
   if (module_exists('replicate_field_collection')) {
     $actions['replicate_ui_replicate_field_collection'] = array(
@@ -72,6 +95,20 @@ function replicate_ui_replicate_node($node) {
     drupal_set_message(t('Node @title has been replicated!', array('@title' => $node->title)));
     
     return array('replica_node' => $new);
+  }
+}
+
+/**
+ * The action function for the 'replicate_ui_replicate_entity'.
+ */
+function replicate_ui_replicate_entity($type, $id) {
+  $toclone = entity_load_single($type, $id);
+  $toclone->id = null;
+  $new = replicate_entity($type, $toclone);
+  if ($new) {
+    drupal_set_message(t('Entity @title has been replicated!', array('@title' => $toclone->title)));
+
+    return array('replica_entity' => $new);
   }
 }
 
