@@ -82,7 +82,7 @@ function replicate_ui_rules_action_info() {
 function replicate_ui_replicate_user($account) {
   $new = replicate_entity('user', $account);
   if ($new) {
-    drupal_set_message(t('User @username has been replicated!', array('@username' => $account->name)));
+    backdrop_set_message(t('User @username has been replicated!', array('@username' => $account->name)));
   }
 }
 
@@ -92,7 +92,7 @@ function replicate_ui_replicate_user($account) {
 function replicate_ui_replicate_node($node) {
   $new = replicate_entity('node', $node);
   if ($new) {
-    drupal_set_message(t('Node @title has been replicated!', array('@title' => $node->title)));
+    backdrop_set_message(t('Node @title has been replicated!', array('@title' => $node->title)));
     return array('replica_node' => $new);
   }
 }
@@ -101,11 +101,11 @@ function replicate_ui_replicate_node($node) {
  * The action function for the 'replicate_ui_replicate_entity'.
  */
 function replicate_ui_replicate_entity($type, $id) {
-  $toclone = entity_load_single($type, $id);
+  $toclone = entity_load($type, $id);
   $toclone->id = null;
   $new = replicate_entity($type, $toclone);
   if ($new) {
-    drupal_set_message(t('Entity @title has been replicated!', array('@title' => $toclone->title)));
+    backdrop_set_message(t('Entity @title has been replicated!', array('@title' => $toclone->title)));
     return array('replica_entity' => $new);
   }
 }
@@ -116,7 +116,7 @@ function replicate_ui_replicate_entity($type, $id) {
 function replicate_ui_replicate_field_collection($field_collection) {
   $new = replicate_entity('field_collection_item', $field_collection);
   if ($new) {
-    drupal_set_message(t('Field Collection @id has been replicated!', array('@id' => $field_collection->item_id)));
+    backdrop_set_message(t('Field Collection @id has been replicated!', array('@id' => $field_collection->item_id)));
   }
 }
 
@@ -125,6 +125,10 @@ function replicate_ui_replicate_field_collection($field_collection) {
  * @ingroup rules
  */
 
+/**
+ * @todo Please document this function.
+ * @see http://drupal.org/node/1354
+ */
 function replicate_ui_rules_event_info() {
   $defaults = array(
     'module' => 'replicate_ui',
@@ -135,9 +139,18 @@ function replicate_ui_rules_event_info() {
     array(
       'label' => t('After Replication'),
       'variables' => array(
-        'replica' => array('type' => 'entity', 'label' => t('Replicate / Clone')),
-        'entity_type' => array('type' => 'text', 'label' => t('Entity type')),
-        'original' => array('type' => 'entity', 'label' => t('Original')),
+        'replica' => array(
+          'type' => 'entity',
+          'label' => t('Replicate / Clone'),
+        ),
+        'entity_type' => array(
+          'type' => 'text',
+          'label' => t('Entity type'),
+        ),
+        'original' => array(
+          'type' => 'entity',
+          'label' => t('Original'),
+        ),
       ),
     ),
   );
