@@ -3,6 +3,8 @@
  * @file
  * Provide a user interface for the Replicate API.
  */
+ 
+ module_load_include('inc', 'replicate_ui', 'views/replicate_ui.views');
 
 /**
  * Implements hook_menu().
