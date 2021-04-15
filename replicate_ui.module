@@ -3,23 +3,48 @@
  * @file
  * Provide a user interface for the Replicate API.
  */
- 
+
  module_load_include('inc', 'replicate_ui', 'views/replicate_ui.views');
+
+ /**
+ * Implements hook_config_info().
+ */
+function replicate_ui_config_info() {
+  $prefixes['replicate_ui.settings'] = array(
+    'label' => t('Replicate UI settings'),
+    'group' => t('Configuration'),
+  );
+  return $prefixes;
+}
 
 /**
  * Implements hook_menu().
  */
 function replicate_ui_menu() {
+  $items['admin/config/user-interface/replicate-ui'] = array(
+    'title' => 'Replicate',
+    'description' => 'Configure Replicate UI',
+    'page callback' => 'backdrop_get_form',
+    'page arguments' => array('replicate_ui_admin_settings'),
+    'access arguments' => array('administer site configuration'),
+  );
+  $skip_confirm = config_get('replicate_ui.settings', 'skip_confirm');
+  if ($skip_confirm) {
+    $page_callback = 'replicate_ui_skip_confirm';
+  }
+  else {
+    $page_callback = 'backdrop_get_form';
+  }
   $items['replicate/%/%'] = array(
     'title' => 'Replicate',
-    'page callback' => 'backdrop_get_form',
+    'page callback' => $page_callback,
     'page arguments' => array('replicate_ui_confirm', 1, 2),
     'access callback' => 'replicate_ui_access',
     'access arguments' => array(1, 2),
   );
   $items['node/%node/replicate'] = array(
     'title' => 'Replicate',
-    'page callback' => 'backdrop_get_form',
+    'page callback' => $page_callback,
     'page arguments' => array('replicate_ui_confirm', 0, 1),
     'access callback' => 'replicate_ui_access',
     'access arguments' => array(0, 1),
@@ -29,7 +54,7 @@ function replicate_ui_menu() {
   // some kind of clean up module: see https://www.drupal.org/node/2394779
   $items['user/%user/replicate'] = array(
     'title' => 'Replicate',
-    'page callback' => 'backdrop_get_form',
+    'page callback' => $page_callback,
     'page arguments' => array('replicate_ui_confirm', 0, 1),
     'access callback' => 'replicate_ui_access',
     'access arguments' => array(0, 1),
@@ -39,7 +64,7 @@ function replicate_ui_menu() {
   if (module_exists('taxonomy')) {
     $items['taxonomy/term/%taxonomy_term/replicate'] = array(
       'title' => 'Replicate',
-      'page callback' => 'backdrop_get_form',
+      'page callback' => $page_callback,
       'page arguments' => array('replicate_ui_confirm', 'taxonomy_term', 2),
       'access callback' => 'replicate_ui_access',
       'access arguments' => array('taxonomy_term', 2),
@@ -54,7 +79,7 @@ function replicate_ui_menu() {
   if (module_exists('entityform')) {
     $items['entityform/%entityform/replicate'] = array(
       'title' => 'Replicate',
-      'page callback' => 'backdrop_get_form',
+      'page callback' => $page_callback,
       'page arguments' => array('replicate_ui_confirm', 0, 1),
       'access callback' => 'replicate_ui_access',
       'access arguments' => array(0, 1),
@@ -70,7 +95,7 @@ function replicate_ui_menu() {
         $path = field_collection_field_get_path($field);
         $items[$path . '/%field_collection_item/replicate'] = array(
           'title' => 'Replicate',
-          'page callback' => 'backdrop_get_form',
+          'page callback' => $page_callback,
           'page arguments' => array('replicate_ui_confirm', 'field_collection_item', 2),
           'access callback' => 'replicate_ui_access',
           'access arguments' => array('field_collection_item', 2),
@@ -81,6 +106,24 @@ function replicate_ui_menu() {
     }
   }
   return $items;
+}
+
+/**
+ * Replicate UI settings form.
+ */
+function replicate_ui_admin_settings() {
+  $config = config('replicate_ui.settings');
+  $form = array();
+  $form['#config'] = 'replicate_ui.settings';
+
+  $form['skip_confirm'] = array(
+    '#type' => 'checkbox',
+    '#title' => 'Skip confirmation on replication',
+    '#default_value' => $config->get('skip_confirm'),
+  );
+  $form = system_settings_form($form);
+
+  return $form;
 }
 
 /**
@@ -107,6 +150,21 @@ function replicate_ui_access($type, $etid) {
   backdrop_alter('replicate_ui_access_check', $access, $type, $entity);
 
   return $access;
+}
+
+/**
+ * Menu callback.  Skip confirmation of replication and feed data directly.
+ */
+function replicate_ui_skip_confirm($confirm_function = NULL, $type, $entity_id) {
+  // convert from object to id if we got an object instead
+  if (is_object($entity_id)) {
+    $info = entity_get_info($type);
+    $entity_id = $entity_id->{$info['entity keys']['id']};
+  }
+  $form_state['values']['confirm'] = 1;
+  $form_state['values']['entity_type'] = $type;
+  $form_state['values']['entity_id'] = $entity_id;
+  replicate_ui_confirm_submit(array(), $form_state);
 }
 
 /**
@@ -175,6 +233,10 @@ function replicate_ui_confirm_submit($form, &$form_state) {
         $replica_wrapped = entity_metadata_wrapper($entity_type, $replica);
 
         rules_invoke_event('replicate_ui_after_replication', $replica_wrapped, $entity_type, $original_wrapped);
+      }
+      // If confirmation form was skipped we'll need to redirect manually.
+      if (config_get('replicate_ui.settings', 'skip_confirm')) {
+        backdrop_goto($path);
       }
     }
   }

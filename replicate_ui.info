@@ -4,3 +4,4 @@ description = "Replicate UI provides integration for Replicate with front-end si
 name = "Replicate UI"
 package = "Entity"
 dependencies[] = replicate
+configure = admin/config/user-interface/replicate-ui
