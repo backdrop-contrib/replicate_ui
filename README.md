@@ -14,13 +14,13 @@ cloning of entities and fields.
 ## Configuration and Usage
 
  - Configure user permissions in **Configuration > User accounts > Permissions**:
-
     - Replicate entities via UI
 
  - Makes the replicate / duplicate functionality available via the UI. Still
    requires Create permissions on an entity to display.
 
- - The module has no menu or modifiable settings. There is no configuration.
+ - A setting has been added under **Configuration > User interface > Replicate**
+   to allow you to skip the confirmation step when replicating.
 
  - To replicate a node, once the module is installed and enabled, edit the node.
    A new tab should appear titled 'replicate'. You will be asked if you are
