@@ -69,6 +69,7 @@ function replicate_ui_menu() {
       'access callback' => 'replicate_ui_access',
       'access arguments' => array('taxonomy_term', 2),
       'type' => MENU_LOCAL_TASK,
+      'weight' => 10,
     );
   }
 
