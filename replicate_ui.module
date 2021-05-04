@@ -117,10 +117,34 @@ function replicate_ui_admin_settings() {
   $form = array();
   $form['#config'] = 'replicate_ui.settings';
 
-  $form['skip_confirm'] = array(
+  $form['general'] = array(
+    '#type' => 'fieldset',
+    '#title' => t('General options'),
+  );
+  $form['general']['skip_confirm'] = array(
     '#type' => 'checkbox',
     '#title' => 'Skip confirmation on replication',
     '#default_value' => $config->get('skip_confirm'),
+  );
+  $form['nodes'] = array(
+    '#type' => 'fieldset',
+    '#title' => t('Node-specific options'),
+  );
+  $form['nodes']['reset_replica_date'] = array(
+    '#type' => 'checkbox',
+    '#title' => 'Reset content authored date',
+    '#default_value' => $config->get('reset_replica_date'),
+  );
+  $form['nodes']['unpublish_replica'] = array(
+    '#type' => 'checkbox',
+    '#title' => 'Unpublish the replica',
+    '#default_value' => $config->get('unpublish_replica'),
+  );
+  $form['nodes']['prepend_title'] = array(
+    '#type' => 'textfield',
+    '#title' => t('Prepend title with text'),
+    '#default_value' => $config->get('prepend_title'),
+    '#size' => 60,
   );
   $form = system_settings_form($form);
 
@@ -211,9 +235,26 @@ function replicate_ui_confirm_submit($form, &$form_state) {
       $id = $new->item_id;
     }
     else {
-      // load entity for replicate
+      // Load entity for replicate.
       $id = replicate_entity_by_id($entity_type, $entity_id);
       $entities = entity_load($entity_type, array($id));
+      // Check node-specific options
+      if ($entity_type == 'node') {
+        $config = config('replicate_ui.settings');
+        if ($config->get('unpublish_replica')) {
+          // Unpublish the node.
+          $entities[$id]->status = 0;
+        }
+        if ($config->get('reset_replica_date')) {
+          // Reset created date.
+          $entities[$id]->created = $entities[$id]->changed;
+        }
+        if (!empty($config->get('prepend_title'))) {
+          // Prepend title with text.
+          $entities[$id]->title = check_plain($config->get('prepend_title')) . $entities[$id]->title;
+        }
+        $entities[$id]->save();
+      }
       $entity_uri = entity_uri($entity_type, $entities[$id]);
       $path = $entity_uri['path'] . '/edit';
     }
