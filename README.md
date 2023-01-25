@@ -41,14 +41,15 @@ Bugs and Feature requests should be reported in the [Issue Queue](https://github
 
 ## Current Maintainers
 
-- [Laryn Kragt Bakker](https://github.com/laryn), [CEDC.org](https://CEDC.org)
+- [Laryn Kragt Bakker](https://github.com/laryn)
 - Collaboration and co-maintainers welcome!
 
 ## Credits
 
-- Ported to Backdrop by [Laryn Kragt Bakker](https://github.com/laryn), [CEDC.org](https://CEDC.org)
-- Maintained for Drupal by [Mark Milutinovic](https://www.drupal.org/u/mmilutinovic1313), [Bryan Ollendyke](https://www.drupal.org/u/btopro), and [Daniel Wehner](https://www.drupal.org/u/dawehner).
-- This module was sponsored for Drupal by [Pennsylvania State University](https://www.drupal.org/pennsylvania-state-university), [ELMSLN](https://www.drupal.org/elmsln), and [Chapter Three](https://www.drupal.org/chapter-three).
+- Ported to Backdrop by [Laryn Kragt Bakker](https://github.com/laryn)
+- Initial port was sponsored by [CEDC.org](https://CEDC.org)
+- Maintained for Drupal by [Mark Milutinovic](https://www.drupal.org/u/mmilutinovic1313), [Bryan Ollendyke](https://www.drupal.org/u/btopro), and [Daniel Wehner](https://www.drupal.org/u/dawehner)
+- This module was sponsored for Drupal by [Pennsylvania State University](https://www.drupal.org/pennsylvania-state-university), [ELMSLN](https://www.drupal.org/elmsln), and [Chapter Three](https://www.drupal.org/chapter-three)
 
 ## License
 
