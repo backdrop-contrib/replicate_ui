@@ -180,7 +180,7 @@ function replicate_ui_access($type, $etid) {
 /**
  * Menu callback.  Skip confirmation of replication and feed data directly.
  */
-function replicate_ui_skip_confirm($confirm_function = NULL, $type, $entity_id) {
+function replicate_ui_skip_confirm(string $confirm_function = NULL, $type, $entity_id) {
   // convert from object to id if we got an object instead
   if (is_object($entity_id)) {
     $info = entity_get_info($type);
