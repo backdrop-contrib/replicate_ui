@@ -72,6 +72,18 @@ function replicate_ui_rules_action_info() {
       ),
     );
   }
+  if (module_exists('replicate_paragraphs')) {
+    $actions['replicate_ui_replicate_paragraphs'] = array(
+      'label' => t('Replicate a Paragraphs Item'),
+      'group' => t('Replicate'),
+      'parameter' => array(
+        'account' => array(
+          'type' => 'paragraphs_item',
+          'label' => t('Paragraphs Item to replicate'),
+        ),
+      ),
+    );
+  }
 
   return $actions;
 }
@@ -117,6 +129,16 @@ function replicate_ui_replicate_field_collection($field_collection) {
   $new = replicate_entity('field_collection_item', $field_collection);
   if ($new) {
     backdrop_set_message(t('Field Collection @id has been replicated!', array('@id' => $field_collection->item_id)));
+  }
+}
+
+/**
+ * The action function for the 'replicate_ui_replicate_paragraphs'.
+ */
+function replicate_ui_replicate_paragraphs($paragraphs) {
+  $new = replicate_entity('paragraphs_item', $paragraphs);
+  if ($new) {
+    backdrop_set_message(t('Paragraph @id has been replicated!', array('@id' => $paragraphs->item_id)));
   }
 }
 
